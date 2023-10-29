@@ -12,14 +12,12 @@ type FreqType = u32; // The type used to store the frequency counts
 // To ensure that we never get values that will overflow or underflow the valueType,
 // we need to make sure that CODE_VALUE_BITS + FREQ_BITS <= TOTAL_BITS.
 // So MAX_CODE and FREQ_BITS work together to ensure that we never get values that will overflow or underflow the ValueType.
-
 const TOTAL_BITS: usize = std::mem::size_of::<ValueType>() * 8; // The number of bits in a ValueType
 const CODE_VALUE_BITS: usize = (TOTAL_BITS / 2) + 1; // The number of bits used to store the code value
 const FREQ_BITS: usize = (TOTAL_BITS / 2) - 1; // The number of bits used to store the frequency count
 
 // This implementation can handle all ASCII characters, plus a special EOF character (so 257 characters).
 // The FREQ_ARRAY_LEN index (i = 257) is used to store the upper bound for the EOF symbol and is also the total number of symbols.
-
 const FREQ_ARRAY_LEN: usize = 258; // 256 ASCII values + 1 for EOF + 1 for total number of symbols
 const TOTAL_FREQ_COUNT_IDX: usize = FREQ_ARRAY_LEN - 1; // Index of total number of symbols (aka upper bound of EOF symbol probability range)
 const MAX_FREQ: FreqType = (1 << FREQ_BITS) - 1; // Max value that can be stored in FREQ_BITS bits
@@ -27,7 +25,6 @@ const EOF: u32 = 256; // End of file character
 
 // ONE_FOURTH, ONE_HALF, and THREE_FOURTHS are calculated from MAX_CODE.
 // They are used in the encode/decode functions to calculate the range and in the encode function to determine when to output bits.
-
 const MAX_CODE: ValueType = (1 << CODE_VALUE_BITS) - 1; // Max value that can be stored in CODE_VALUE_BITS bits
 const ONE_FOURTH: ValueType = (1 << CODE_VALUE_BITS) / 4; // 1/4 of MAX_CODE
 const ONE_HALF: ValueType = (1 << CODE_VALUE_BITS) / 2; // 1/2 of MAX_CODE
