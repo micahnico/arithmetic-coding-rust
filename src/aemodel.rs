@@ -3,7 +3,11 @@ use std::time::Instant;
 use crate::compression_results::CompressionResults;
 use crate::decompression_results::DecompressionResults;
 
+// FreqType should have at least half the bits that ValueType has. Using the unsigned integer type that is a step down from ValueType (aka 1/2 the bits)
+// results in the best case scenario for speed while making sure there can't be any overflow
+// due to how TOTAL_BITS are split between CODE_VALUE_BITS and FREQ_BITS.
 type ValueType = u64; // The type used to store the values throughout the calculations
+type FreqType = u32; // The type used to store the frequency counts
 
 // To ensure that we never get values that will overflow or underflow the valueType,
 // we need to make sure that CODE_VALUE_BITS + FREQ_BITS <= TOTAL_BITS.
@@ -18,7 +22,7 @@ const FREQ_BITS: usize = (TOTAL_BITS / 2) - 1; // The number of bits used to sto
 
 const FREQ_ARRAY_LEN: usize = 258; // 256 ASCII values + 1 for EOF + 1 for total number of symbols
 const TOTAL_FREQ_COUNT_IDX: usize = FREQ_ARRAY_LEN - 1; // Index of total number of symbols (aka upper bound of EOF symbol probability range)
-const MAX_FREQ: ValueType = (1 << FREQ_BITS) - 1; // Max value that can be stored in FREQ_BITS bits
+const MAX_FREQ: FreqType = (1 << FREQ_BITS) - 1; // Max value that can be stored in FREQ_BITS bits
 const EOF: u32 = 256; // End of file character
 
 // ONE_FOURTH, ONE_HALF, and THREE_FOURTHS are calculated from MAX_CODE.
@@ -31,14 +35,14 @@ const THREE_FOURTHS: ValueType = 3 * (1 << CODE_VALUE_BITS) / 4; // 3/4 of MAX_C
 
 // Represents the probability of a symbol
 struct Probability {
-    start: ValueType,
-    end: ValueType,
-    denom: ValueType,
+    start: FreqType,
+    end: FreqType,
+    denom: FreqType,
 }
 
 // The Arithmetic Encoding model
 pub struct AEModel {
-    cumulative_frequencies: [ValueType; FREQ_ARRAY_LEN],
+    cumulative_frequencies: [FreqType; FREQ_ARRAY_LEN],
     frozen: bool,
 }
 
@@ -56,7 +60,7 @@ impl AEModel {
     // Sets the cumulative frequencies to their initial values and unfreezes the model
     fn reset(&mut self) {
         for i in 0..FREQ_ARRAY_LEN {
-            self.cumulative_frequencies[i] = i as ValueType;
+            self.cumulative_frequencies[i] = i as FreqType;
         }
         self.frozen = false;
     }
@@ -88,7 +92,7 @@ impl AEModel {
     // Get the character and probability for the given scaled value
     fn get_char(&self, scaled_value: ValueType) -> char {
         for i in 0..TOTAL_FREQ_COUNT_IDX {
-            if scaled_value < self.cumulative_frequencies[i + 1] {
+            if scaled_value < self.cumulative_frequencies[i + 1] as ValueType {
                 return char::from_u32(i as u32).unwrap();
             }
         }
@@ -125,8 +129,8 @@ impl AEModel {
 
             // p.start / p.denom is the lower bound of the probability range
             // p.end / p.denom is the upper bound of the probability range
-            high = low + (range * p.end / p.denom) - 1;
-            low = low + (range * p.start / p.denom);
+            high = low + (range * (p.end as ValueType) / (p.denom as ValueType)) - 1;
+            low = low + (range * (p.start as ValueType) / (p.denom as ValueType));
 
             loop {
                 if high < ONE_HALF {
@@ -201,8 +205,10 @@ impl AEModel {
             let range = high - low + 1;
             // scaled_value turns the value into the cumulative frequency value we need to look for in the model's cumulative_frequencies
             // scaled_value = (distance from start of range) * (total number of symbols) / (size of range)
-            let scaled_value: ValueType =
-                ((value - low + 1) * self.cumulative_frequencies[TOTAL_FREQ_COUNT_IDX] - 1) / range;
+            let scaled_value: ValueType = ((value - low + 1)
+                * (self.cumulative_frequencies[TOTAL_FREQ_COUNT_IDX] as ValueType)
+                - 1)
+                / range;
 
             // get the character and probability
             let c = self.get_char(scaled_value);
@@ -216,8 +222,8 @@ impl AEModel {
 
             // p.start / p.denom is the lower bound of the probability range
             // p.end / p.denom is the upper bound of the probability range
-            high = low + (range * p.end / p.denom) - 1;
-            low = low + (range * p.start / p.denom);
+            high = low + (range * (p.end as ValueType) / (p.denom as ValueType)) - 1;
+            low = low + (range * (p.start as ValueType) / (p.denom as ValueType));
 
             loop {
                 if high < ONE_HALF {
