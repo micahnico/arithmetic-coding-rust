@@ -1,2 +1,5 @@
 /target
 .DS_Store
+/files/output.txt
+/files/compressed.txt
+/files/enwik9.txt

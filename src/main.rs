@@ -8,7 +8,7 @@ use std::io::{Read, Write};
 // Run the encoder and decoder
 fn main() {
     // read input from file
-    let mut input_file = File::open("files/Bible.txt").expect("Could not open file");
+    let mut input_file = File::open("files/enwik8.txt").expect("Could not open file");
     let mut input_str = String::new();
     let _ = input_file.read_to_string(&mut input_str);
 
