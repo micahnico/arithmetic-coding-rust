@@ -5,7 +5,7 @@ mod decompression_results;
 use std::fs::File;
 use std::io::{Read, Write};
 
-// Run the encoder and decoder
+// Run the encoder and decoder on the input files
 fn main() {
     let files = [
         "input.txt",
@@ -16,8 +16,8 @@ fn main() {
         "input6.txt",
         "input7.txt",
         "input8.txt",
-        // "Bible.txt",
-        // "enwik8.txt",
+        "Bible.txt",
+        "enwik8.txt",
         // "enwik9.txt",
     ];
 
