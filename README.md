@@ -3,9 +3,9 @@
 - uses a simple adaptive model to encode/compress the data
 # Running the Code
 ### On Mac
-- run target/release/arithmetic-coding
+- run executables/arithmetic-coding
 ### On Windows
-- run target/x86_64-pc-windows-msvc/release/arithmetic-coding.exe
+- run executables/arithmetic-coding.exe
 # Notes
 - the input files that the code runs are located in the files/input directory
 - when the code is run:
