@@ -7,33 +7,55 @@ use std::io::{Read, Write};
 
 // Run the encoder and decoder
 fn main() {
-    // read input from file
-    let mut input_file = File::open("files/enwik8.txt").expect("Could not open file");
-    let mut input_str = String::new();
-    let _ = input_file.read_to_string(&mut input_str);
+    let files = [
+        "input.txt",
+        "input2.txt",
+        "input3.txt",
+        "input4.txt",
+        "input5.txt",
+        "input6.txt",
+        "input7.txt",
+        "input8.txt",
+        // "Bible.txt",
+        // "enwik8.txt",
+        // "enwik9.txt",
+    ];
 
-    // create a new model
-    let mut model = aemodel::AEModel::new();
+    for (i, file) in files.iter().enumerate() {
+        println!("-----------------------------------\n");
+        println!("Processing {}\n", file);
 
-    // encode/compress the input
-    println!("Compressing...");
-    let compression_result = model.encode(input_str);
-    compression_result.print_info(true);
+        // read input from file
+        let mut input_file =
+            File::open(format!("files/input/{}", file)).expect("Could not open file");
+        let mut input_str = String::new();
+        let _ = input_file.read_to_string(&mut input_str);
 
-    // write the compressed data to file
-    println!("Writing compressed data to file...");
-    let mut compressed_file = File::create("files/compressed.txt").expect("Could not create file");
-    let _ = compressed_file.write_all(&compression_result.encoded_bytes());
-    println!("Writing done.\n");
+        // create a new model
+        let mut model = aemodel::AEModel::new();
 
-    // decode the compressed data
-    println!("Decompressing...");
-    let decompression_result = model.decode(compression_result.encoded_bits.to_vec());
-    decompression_result.print_info(true);
+        // encode/compress the input
+        println!("Encoding...");
+        let compression_result = model.encode(input_str);
+        compression_result.print_info(true);
 
-    // write the decoded data to output file
-    println!("Writing decompressed data to file...");
-    let mut output_file = File::create("files/output.txt").expect("Could not create file");
-    let _ = output_file.write_all(&decompression_result.decoded_bytes);
-    println!("Writing done.");
+        // write the compressed data to file
+        let mut compressed_file =
+            File::create(format!("files/encoded/{}", file)).expect("Could not create file");
+        let _ = compressed_file.write_all(&compression_result.encoded_bytes());
+
+        // decode the encoded data
+        println!("Decoding...");
+        let decompression_result = model.decode(compression_result.encoded_bits.to_vec());
+        decompression_result.print_info(true);
+
+        // Write the decoded data to output file.
+        // Don't write the largest files. This is just so the output can be easily checked to see
+        // if the code is actually working.
+        if i < 8 {
+            let mut output_file =
+                File::create(format!("files/decoded/{}", file)).expect("Could not create file");
+            let _ = output_file.write_all(&decompression_result.decoded_bytes);
+        }
+    }
 }
