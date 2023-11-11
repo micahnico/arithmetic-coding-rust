@@ -2,6 +2,8 @@
 .DS_Store
 /files/encoded
 /files/decoded
+/files/input/5000000_words
 /files/input/10000000_words
+/files/input/50000000_words
 /files/input/100000000_words
 /files/input/enwik9.txt

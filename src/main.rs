@@ -5,14 +5,18 @@ mod decompression_results;
 use std::fs::File;
 use std::io::{Read, Write};
 
-const NUM_SIZES: usize = 7;
+const NUM_SIZES: usize = 11;
 const SIZES: [usize; NUM_SIZES] = [
     100,
     1_000,
     10_000,
+    50_000,
     100_000,
+    500_000,
     1_000_000,
+    5_000_000,
     10_000_000,
+    50_000_000,
     100_000_000,
 ];
 const SAMPLES_PER_SIZE: usize = 10;
