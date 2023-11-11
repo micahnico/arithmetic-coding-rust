@@ -3,7 +3,7 @@ use std::time::Duration;
 pub struct CompressionResults {
     pub encoded_bits: Vec<bool>,
     original_bits_len: usize,
-    duration: Duration,
+    pub duration: Duration,
 }
 
 impl CompressionResults {
@@ -44,13 +44,18 @@ impl CompressionResults {
         encoded_bytes
     }
 
-    fn ratio(&self) -> f32 {
+    pub fn ratio(&self) -> f32 {
         self.encoded_bits.len() as f32 / self.original_bits_len as f32
     }
 
     pub fn print_info(&self, bottom_spacer: bool) {
         println!("Compression done in {} ms", self.duration.as_millis());
-        println!("Compression ratio: {}", self.ratio());
+        println!(
+            "Compression ratio: {} / {} = {}",
+            self.encoded_bits.len(),
+            self.original_bits_len,
+            self.ratio()
+        );
         if bottom_spacer {
             println!();
         }

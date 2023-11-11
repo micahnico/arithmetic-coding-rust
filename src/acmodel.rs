@@ -38,15 +38,15 @@ struct Probability {
 }
 
 // The Arithmetic Encoding model
-pub struct AEModel {
+pub struct ACModel {
     cumulative_frequencies: [FreqType; FREQ_ARRAY_LEN],
     frozen: bool,
 }
 
-impl AEModel {
+impl ACModel {
     // Create a new AEModel and initialize the cumulative frequencies
-    pub fn new() -> AEModel {
-        let mut m = AEModel {
+    pub fn new() -> ACModel {
+        let mut m = ACModel {
             cumulative_frequencies: [0; FREQ_ARRAY_LEN],
             frozen: false,
         };
