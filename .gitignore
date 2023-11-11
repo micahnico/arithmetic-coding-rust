@@ -1,7 +1,7 @@
 /target
 .DS_Store
-/files/encoded
-/files/decoded
+/files/encoded/*.txt
+/files/decoded/*.txt
 /files/input/5000000_words
 /files/input/10000000_words
 /files/input/50000000_words
