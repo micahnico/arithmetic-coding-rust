@@ -8,13 +8,18 @@
 - src/decompression_results.rs -> struct and associated functions for the results of the decoding process
 ## Running the Code
 #### On Mac
+- download the test files from the OneDrive folder and place them in the files/input directory
+    - some of the smaller sizes are already there as an example
 - move executables/arithmetic-coding to the root folder
 - then run that file
 #### On Windows
+- download the test files from the OneDrive folder and place them in the files/input directory
+    - some of the smaller sizes are already there as an example
 - move executables/arithmetic-coding.exe to the root folder
 - then run that file
 ## Notes
+- it will take quite a while to run the code
 - the input files that the code runs are located in the files/input directory
-- when the code is run:
-	- the encoded (compressed) files are written to the files/encoded directory
-	- the smaller decoded files are written to the files/decoded directory to make it easy to check that the code is doing what it should
+- for the first instance of each file size:
+	- the encoded (compressed) file is written to the files/encoded directory
+	- the decoded file is written to the files/decoded directory to make it easy to check that the code is doing what it should
