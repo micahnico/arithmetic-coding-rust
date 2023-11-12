@@ -69,9 +69,9 @@ fn main() {
         }
     }
 
+    // Print the averages
     println!("-----------------------------------\n");
     println!("Final results:\n");
-    // Print the averages
     for size in 0..NUM_SIZES {
         let mut ratios_sum = 0f32;
         let mut encoding_durations_sum = 0u128;
@@ -91,6 +91,7 @@ fn main() {
     }
     println!("\n-----------------------------------\n");
 
+    // allow user to see the output before the program exits
     let mut wait_for_input = String::new();
     std::io::stdin()
         .read_line(&mut wait_for_input)

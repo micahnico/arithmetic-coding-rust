@@ -20,6 +20,7 @@ impl CompressionResults {
         cr
     }
 
+    // converts the encoded bits to bytes
     pub fn encoded_bytes(&self) -> Vec<u8> {
         let encoded_bits_len = self.encoded_bits.len();
         let mut encoded_bytes = Vec::new();

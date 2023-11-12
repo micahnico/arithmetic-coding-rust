@@ -37,14 +37,14 @@ struct Probability {
     denom: FreqType,
 }
 
-// The Arithmetic Encoding model
+// The Arithmetic Coding model
 pub struct ACModel {
     cumulative_frequencies: [FreqType; FREQ_ARRAY_LEN],
     frozen: bool,
 }
 
 impl ACModel {
-    // Create a new AEModel and initialize the cumulative frequencies
+    // Create a new ACModel and initialize the cumulative frequencies
     pub fn new() -> ACModel {
         let mut m = ACModel {
             cumulative_frequencies: [0; FREQ_ARRAY_LEN],
